@@ -1,16 +1,10 @@
-const API_URL = "https://desbloqueo.sarmientoba.net/api/unlock"
-const CSRF_TOKEN = "LV8AYQsDALs5HgZwHlbql0u0sENNUovq"
-
 export async function generateUnlockCode(
   hwid: string,
   bt?: string
 ): Promise<string> {
-  const res = await fetch(API_URL, {
+  const res = await fetch("/api/unlock", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-Token": CSRF_TOKEN,
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ hwid, bt: bt || "" }),
   })
 

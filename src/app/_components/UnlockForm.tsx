@@ -37,7 +37,6 @@ export default function UnlockForm({ hwid, bt, onHwidChange, onBtChange, onSave 
       onSave({
         id: crypto.randomUUID(),
         hwid,
-        bt,
         createdAt: new Date().toISOString(),
       })
     } catch (e: any) {

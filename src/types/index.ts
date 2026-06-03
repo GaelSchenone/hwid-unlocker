@@ -1,7 +1,6 @@
 export interface HwidEntry {
   id: string
   hwid: string
-  bt: string
   createdAt: string
 }
 

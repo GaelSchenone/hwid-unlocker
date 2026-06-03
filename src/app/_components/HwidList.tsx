@@ -6,7 +6,7 @@ interface Props {
   entries: HwidEntry[]
   onDelete: (id: string) => void
   onClear: () => void
-  onFill: (hwid: string, bt: string) => void
+  onFill: (hwid: string) => void
 }
 
 export default function HwidList({ entries, onDelete, onClear, onFill }: Props) {
@@ -47,16 +47,15 @@ export default function HwidList({ entries, onDelete, onClear, onFill }: Props) 
           <thead>
             <tr className="text-[9px] uppercase tracking-wider" style={{ color: "var(--text-secondary)" }}>
               <th className="text-left pb-1 pr-1.5 font-normal">HWID</th>
-              <th className="text-left pb-1 pr-1.5 font-normal hidden sm:table-cell">BT</th>
-              <th className="text-left pb-1 pr-1.5 font-normal hidden sm:table-cell">Fecha</th>
-              <th className="text-right pb-1 font-normal"></th>
+              <th className="text-left pb-1 font-normal">Fecha</th>
+              <th className="text-right pb-1 pl-1.5 font-normal"></th>
             </tr>
           </thead>
           <tbody>
             {entries.map((entry) => (
               <tr key={entry.id}
-                onClick={() => onFill(entry.hwid, entry.bt)}
-                onKeyDown={(e) => { if (e.key === "Enter") onFill(entry.hwid, entry.bt) }}
+                onClick={() => onFill(entry.hwid)}
+                onKeyDown={(e) => { if (e.key === "Enter") onFill(entry.hwid) }}
                 tabIndex={0}
                 role="button"
                 aria-label={`Rellenar con HWID ${entry.hwid}`}
@@ -66,19 +65,14 @@ export default function HwidList({ entries, onDelete, onClear, onFill }: Props) 
                 <td className="py-1 pr-1.5">
                   <code className="font-mono text-[10px]" style={{ color: "var(--fg)" }}>{entry.hwid}</code>
                 </td>
-                <td className="py-1 pr-1.5 hidden sm:table-cell">
-                  <code className="font-mono text-[10px]" style={{ color: "var(--text-secondary)" }}>
-                    {entry.bt || "—"}
-                  </code>
-                </td>
-                <td className="py-1 pr-1.5 hidden sm:table-cell" style={{ color: "var(--text-secondary)" }}>
+                <td className="py-1" style={{ color: "var(--text-secondary)" }}>
                   <span className="text-[10px]">
                     {new Date(entry.createdAt).toLocaleDateString("es-AR", {
                       day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit",
                     })}
                   </span>
                 </td>
-                <td className="py-1 text-right">
+                <td className="py-1 text-right pl-1.5">
                   <button
                     onClick={(e) => { e.stopPropagation(); onDelete(entry.id) }}
                     className="text-[9px] px-1 py-0.5"

@@ -17,7 +17,7 @@ export default function Home() {
       const existing = prev.findIndex((e) => e.hwid === entry.hwid)
       if (existing !== -1) {
         const updated = [...prev]
-        updated[existing] = { ...updated[existing], bt: entry.bt, createdAt: entry.createdAt }
+        updated[existing] = { ...updated[existing], createdAt: entry.createdAt }
         return updated
       }
       return [entry, ...prev]
@@ -32,9 +32,8 @@ export default function Home() {
     setEntries([])
   }, [setEntries])
 
-  const handleFill = useCallback((filledHwid: string, filledBt: string) => {
+  const handleFill = useCallback((filledHwid: string) => {
     setHwid(filledHwid)
-    setBt(filledBt)
     window.scrollTo({ top: 0, behavior: "smooth" })
   }, [])
 

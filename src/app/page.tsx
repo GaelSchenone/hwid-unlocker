@@ -41,16 +41,8 @@ export default function Home() {
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: "var(--bg)" }}>
       <header className="border-b px-4 py-1.5" style={{ borderColor: "var(--border)" }}>
         <div className="max-w-xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-bold tracking-wide" style={{ color: "var(--red)" }}>
-              HWID Unlocker
-            </span>
-            <span className="text-[9px] font-mono" style={{ color: "var(--text-secondary)" }}>
-              v3.0.4
-            </span>
-          </div>
-          <span className="text-[9px]" style={{ color: "var(--text-secondary)" }}>
-            tdops-unlocker
+          <span className="text-sm font-bold tracking-wide" style={{ color: "var(--red)" }}>
+            Generador
           </span>
         </div>
       </header>

@@ -57,7 +57,7 @@ export default function UnlockForm({ hwid, bt, onHwidChange, onBtChange, onSave 
   return (
     <div className="card">
       <div className="text-[10px] uppercase tracking-wider mb-2" style={{ color: "var(--red)" }}>
-        &gt; Generar desbloqueo
+        &gt; Generar código
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-2">
@@ -119,7 +119,7 @@ export default function UnlockForm({ hwid, bt, onHwidChange, onBtChange, onSave 
       {code && (
         <div className="mt-2">
           <div className="text-[9px] uppercase tracking-wider mb-0.5" style={{ color: "var(--text-secondary)" }}>
-            Código de desbloqueo
+            Código generado
           </div>
           <div className="p-2 text-xs font-mono break-all select-all"
             style={{

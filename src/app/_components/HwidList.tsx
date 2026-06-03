@@ -14,10 +14,10 @@ export default function HwidList({ entries, onDelete, onClear, onFill }: Props) 
     return (
       <div className="card">
         <div className="text-[10px] uppercase tracking-wider" style={{ color: "var(--warn)" }}>
-          &gt; HWIDs guardados
+          &gt; Historial
         </div>
         <p className="text-[11px] mt-1" style={{ color: "var(--text-secondary)" }}>
-          Vacío. Generá un código y los HWIDs se guardan automáticamente.
+          Vacío. Los códigos generados se guardan automáticamente.
         </p>
       </div>
     )
@@ -27,7 +27,7 @@ export default function HwidList({ entries, onDelete, onClear, onFill }: Props) 
     <div className="card">
       <div className="flex items-center justify-between mb-2">
         <div className="text-[10px] uppercase tracking-wider" style={{ color: "var(--red)" }}>
-          &gt; HWIDs guardados
+          &gt; Historial
           <span className="ml-1.5 font-mono text-[9px]" style={{ color: "var(--text-secondary)" }}>
             {entries.length}
           </span>
@@ -91,7 +91,7 @@ export default function HwidList({ entries, onDelete, onClear, onFill }: Props) 
         </table>
       </div>
       <div className="text-[9px] mt-1.5" style={{ color: "var(--text-secondary)" }}>
-        Click en un HWID para rellenar el formulario.
+        Click para rellenar el formulario.
       </div>
     </div>
   )

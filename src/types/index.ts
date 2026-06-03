@@ -2,7 +2,6 @@ export interface HwidEntry {
   id: string
   hwid: string
   bt: string
-  unlockCode: string
   createdAt: string
 }
 

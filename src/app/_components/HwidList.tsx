@@ -1,25 +1,15 @@
 "use client"
 
-import { useState } from "react"
 import type { HwidEntry } from "@/types"
 
 interface Props {
   entries: HwidEntry[]
   onDelete: (id: string) => void
   onClear: () => void
+  onFill: (hwid: string, bt: string) => void
 }
 
-export default function HwidList({ entries, onDelete, onClear }: Props) {
-  const [copiedId, setCopiedId] = useState<string | null>(null)
-
-  async function handleCopy(entry: HwidEntry) {
-    try {
-      await navigator.clipboard.writeText(entry.unlockCode)
-      setCopiedId(entry.id)
-      setTimeout(() => setCopiedId(null), 2000)
-    } catch {}
-  }
-
+export default function HwidList({ entries, onDelete, onClear, onFill }: Props) {
   if (entries.length === 0) {
     return (
       <div className="card">
@@ -27,7 +17,7 @@ export default function HwidList({ entries, onDelete, onClear }: Props) {
           &gt; HWIDs guardados
         </div>
         <p className="text-[11px] mt-1" style={{ color: "var(--text-secondary)" }}>
-          Vacío. Generá un código y guardalo.
+          Vacío. Generá un código y los HWIDs se guardan automáticamente.
         </p>
       </div>
     )
@@ -58,14 +48,21 @@ export default function HwidList({ entries, onDelete, onClear }: Props) {
             <tr className="text-[9px] uppercase tracking-wider" style={{ color: "var(--text-secondary)" }}>
               <th className="text-left pb-1 pr-1.5 font-normal">HWID</th>
               <th className="text-left pb-1 pr-1.5 font-normal hidden sm:table-cell">BT</th>
-              <th className="text-left pb-1 pr-1.5 font-normal">Código</th>
               <th className="text-left pb-1 pr-1.5 font-normal hidden sm:table-cell">Fecha</th>
               <th className="text-right pb-1 font-normal"></th>
             </tr>
           </thead>
           <tbody>
             {entries.map((entry) => (
-              <tr key={entry.id} className="group" style={{ borderTop: "1px solid var(--border)" }}>
+              <tr key={entry.id}
+                onClick={() => onFill(entry.hwid, entry.bt)}
+                onKeyDown={(e) => { if (e.key === "Enter") onFill(entry.hwid, entry.bt) }}
+                tabIndex={0}
+                role="button"
+                aria-label={`Rellenar con HWID ${entry.hwid}`}
+                className="group cursor-pointer"
+                style={{ borderTop: "1px solid var(--border)" }}
+              >
                 <td className="py-1 pr-1.5">
                   <code className="font-mono text-[10px]" style={{ color: "var(--fg)" }}>{entry.hwid}</code>
                 </td>
@@ -73,9 +70,6 @@ export default function HwidList({ entries, onDelete, onClear }: Props) {
                   <code className="font-mono text-[10px]" style={{ color: "var(--text-secondary)" }}>
                     {entry.bt || "—"}
                   </code>
-                </td>
-                <td className="py-1 pr-1.5">
-                  <code className="font-mono text-[10px]" style={{ color: "var(--green)" }}>{entry.unlockCode}</code>
                 </td>
                 <td className="py-1 pr-1.5 hidden sm:table-cell" style={{ color: "var(--text-secondary)" }}>
                   <span className="text-[10px]">
@@ -85,35 +79,25 @@ export default function HwidList({ entries, onDelete, onClear }: Props) {
                   </span>
                 </td>
                 <td className="py-1 text-right">
-                  <div className="flex gap-1 justify-end">
-                    <button
-                      onClick={() => handleCopy(entry)}
-                      className="text-[9px] px-1 py-0.5"
-                      style={{
-                        color: copiedId === entry.id ? "var(--green)" : "var(--text-secondary)",
-                        border: "1px solid var(--border)",
-                        backgroundColor: "transparent",
-                      }}
-                    >
-                      {copiedId === entry.id ? "copiado" : "copiar"}
-                    </button>
-                    <button
-                      onClick={() => onDelete(entry.id)}
-                      className="text-[9px] px-1 py-0.5"
-                      style={{
-                        color: "var(--red)",
-                        border: "1px solid color-mix(in srgb, var(--red) 20%, transparent)",
-                        backgroundColor: "transparent",
-                      }}
-                    >
-                      ✕
-                    </button>
-                  </div>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onDelete(entry.id) }}
+                    className="text-[9px] px-1 py-0.5"
+                    style={{
+                      color: "var(--red)",
+                      border: "1px solid color-mix(in srgb, var(--red) 20%, transparent)",
+                      backgroundColor: "transparent",
+                    }}
+                  >
+                    ✕
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="text-[9px] mt-1.5" style={{ color: "var(--text-secondary)" }}>
+        Click en un HWID para rellenar el formulario.
       </div>
     </div>
   )

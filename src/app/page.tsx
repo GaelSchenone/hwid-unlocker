@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback } from "react"
+import { useState, useCallback } from "react"
 import type { HwidEntry } from "@/types"
 import UnlockForm from "./_components/UnlockForm"
 import HwidList from "./_components/HwidList"
@@ -9,9 +9,19 @@ import { useLocalStorage } from "@/lib/useLocalStorage"
 
 export default function Home() {
   const [entries, setEntries] = useLocalStorage<HwidEntry[]>("hwid-entries", [])
+  const [hwid, setHwid] = useState("")
+  const [bt, setBt] = useState("")
 
   const handleSave = useCallback((entry: HwidEntry) => {
-    setEntries((prev) => [entry, ...prev])
+    setEntries((prev) => {
+      const existing = prev.findIndex((e) => e.hwid === entry.hwid)
+      if (existing !== -1) {
+        const updated = [...prev]
+        updated[existing] = { ...updated[existing], bt: entry.bt, createdAt: entry.createdAt }
+        return updated
+      }
+      return [entry, ...prev]
+    })
   }, [setEntries])
 
   const handleDelete = useCallback((id: string) => {
@@ -21,6 +31,12 @@ export default function Home() {
   const handleClear = useCallback(() => {
     setEntries([])
   }, [setEntries])
+
+  const handleFill = useCallback((filledHwid: string, filledBt: string) => {
+    setHwid(filledHwid)
+    setBt(filledBt)
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }, [])
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: "var(--bg)" }}>
@@ -41,11 +57,12 @@ export default function Home() {
       </header>
 
       <main className="flex-1 max-w-xl mx-auto w-full px-4 py-4 space-y-3">
-        <UnlockForm onSave={handleSave} />
+        <UnlockForm hwid={hwid} bt={bt} onHwidChange={setHwid} onBtChange={setBt} onSave={handleSave} />
         <HwidList
           entries={entries}
           onDelete={handleDelete}
           onClear={handleClear}
+          onFill={handleFill}
         />
       </main>
 

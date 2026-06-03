@@ -5,12 +5,14 @@ import { generateUnlockCode, isHWIDHex, isBTHex } from "@/lib/api"
 import type { HwidEntry } from "@/types"
 
 interface Props {
+  hwid: string
+  bt: string
+  onHwidChange: (v: string) => void
+  onBtChange: (v: string) => void
   onSave: (entry: HwidEntry) => void
 }
 
-export default function UnlockForm({ onSave }: Props) {
-  const [hwid, setHwid] = useState("")
-  const [bt, setBt] = useState("")
+export default function UnlockForm({ hwid, bt, onHwidChange, onBtChange, onSave }: Props) {
   const [loading, setLoading] = useState(false)
   const [code, setCode] = useState("")
   const [error, setError] = useState("")
@@ -32,22 +34,17 @@ export default function UnlockForm({ onSave }: Props) {
     try {
       const result = await generateUnlockCode(hwid, bt)
       setCode(result)
+      onSave({
+        id: crypto.randomUUID(),
+        hwid,
+        bt,
+        createdAt: new Date().toISOString(),
+      })
     } catch (e: any) {
       setError(e.message || "Error al generar código.")
     } finally {
       setLoading(false)
     }
-  }
-
-  function handleSave() {
-    if (!code) return
-    onSave({
-      id: crypto.randomUUID(),
-      hwid,
-      bt,
-      unlockCode: code,
-      createdAt: new Date().toISOString(),
-    })
   }
 
   async function handleCopy() {
@@ -72,7 +69,7 @@ export default function UnlockForm({ onSave }: Props) {
           <input
             type="text"
             value={hwid}
-            onChange={(e) => { setHwid(e.target.value.toUpperCase()); setCode(""); setError("") }}
+            onChange={(e) => { onHwidChange(e.target.value.toUpperCase()); setCode(""); setError("") }}
             placeholder="A1B2C3D4E5F6"
             maxLength={12}
             required
@@ -89,7 +86,7 @@ export default function UnlockForm({ onSave }: Props) {
           <input
             type="text"
             value={bt}
-            onChange={(e) => { setBt(e.target.value.toUpperCase()); setCode(""); setError("") }}
+            onChange={(e) => { onBtChange(e.target.value.toUpperCase()); setCode(""); setError("") }}
             placeholder="FF00AA"
             className="input"
             autoComplete="off"
@@ -138,10 +135,7 @@ export default function UnlockForm({ onSave }: Props) {
             <button onClick={handleCopy} className="btn-secondary flex-1">
               {copied ? "copiado" : "copiar"}
             </button>
-            <button onClick={handleSave} className="btn-secondary flex-1">
-              guardar
-            </button>
-            <button onClick={() => { setCode(""); setError("") }} className="btn-secondary flex-shrink-0">
+            <button onClick={() => { setCode(""); setError("") }} className="btn-secondary flex-1">
               limpiar
             </button>
           </div>
